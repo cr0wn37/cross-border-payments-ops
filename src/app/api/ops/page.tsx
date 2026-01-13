@@ -16,55 +16,86 @@ export default function OpsPage() {
       .then(setAlerts);
   }, []);
 
+  const tableStyle: React.CSSProperties = {
+  width: "100%",
+  borderCollapse: "collapse",
+  tableLayout: "fixed",
+  marginTop: 12,
+};
+
+const thStyle: React.CSSProperties = {
+  textAlign: "left",
+  padding: "8px 12px",
+  borderBottom: "1px solid #333",
+  fontWeight: 600,
+};
+
+const cell: React.CSSProperties = {
+  padding: "8px 12px",
+  borderBottom: "1px solid #222",
+  whiteSpace: "nowrap",
+};
+
+const idCell: React.CSSProperties = {
+  ...cell,
+  fontFamily: "monospace",
+  width: 120,
+};
+
+
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Ops Dashboard</h1>
+  <div style={{ padding: 24, color: "#fff" }}>
+    <h1>Ops Dashboard</h1>
 
-      <h2>Payments</h2>
-      <table border={1} cellPadding={8}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Status</th>
-            <th>Retries</th>
-            <th>Updated</th>
+    <h2>Payments</h2>
+    <table style={tableStyle}>
+      <thead>
+        <tr>
+          <th style={thStyle}>ID</th>
+          <th style={thStyle}>Status</th>
+          <th style={thStyle}>Retries</th>
+          <th style={thStyle}>Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {payments.map(p => (
+          <tr key={p.id}>
+            <td style={idCell}>{p.id.slice(0, 8)}</td>
+            <td style={cell}>{p.status}</td>
+            <td style={cell}>{p.retry_count}</td>
+            <td style={cell}>
+              {new Date(p.updated_at).toLocaleString()}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {payments.map(p => (
-            <tr key={p.id}>
-              <td>{p.id.slice(0, 8)}</td>
-              <td>{p.status}</td>
-              <td>{p.retry_count}</td>
-              <td>{new Date(p.updated_at).toLocaleString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        ))}
+      </tbody>
+    </table>
 
-      <h2 style={{ marginTop: 40 }}>Alerts</h2>
-      <table border={1} cellPadding={8}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Type</th>
-            <th>Payment</th>
-            <th>Triggered</th>
-            <th>Resolved</th>
+    <h2 style={{ marginTop: 40 }}>Alerts</h2>
+    <table style={tableStyle}>
+      <thead>
+        <tr>
+          <th style={thStyle}>ID</th>
+          <th style={thStyle}>Type</th>
+          <th style={thStyle}>Payment</th>
+          <th style={thStyle}>Triggered</th>
+          <th style={thStyle}>Resolved</th>
+        </tr>
+      </thead>
+      <tbody>
+        {alerts.map(a => (
+          <tr key={a.id}>
+            <td style={idCell}>{a.id.slice(0, 8)}</td>
+            <td style={cell}>{a.type}</td>
+            <td style={idCell}>{a.payment_id.slice(0, 8)}</td>
+            <td style={cell}>
+              {new Date(a.triggered_at).toLocaleString()}
+            </td>
+            <td style={cell}>{a.resolved ? "Yes" : "No"}</td>
           </tr>
-        </thead>
-        <tbody>
-          {alerts.map(a => (
-            <tr key={a.id}>
-              <td>{a.id.slice(0, 8)}</td>
-              <td>{a.type}</td>
-              <td>{a.payment_id.slice(0, 8)}</td>
-              <td>{new Date(a.triggered_at).toLocaleString()}</td>
-              <td>{a.resolved ? "Yes" : "No"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
 }
